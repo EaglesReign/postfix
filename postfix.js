@@ -3,6 +3,9 @@
 //postfix.js
 //This program does this.
 
+//DEBUG variable to debug code as I work
+var DEBUG = true;
+
 //Prompts the user for an infix expression
 var input = readline();
 //Passes input to the main function that does the work of converting
@@ -44,37 +47,80 @@ function clear() {
   this.top = 0;
 }
 
-function isOperator(y) {
+function isOperator(x) {
   //if y is a valid operator, return true.
-  if (y==="+" || y==="-" || y==="*" || y==="/" || y==="(" || y===")") {
-    print("What is being looked at: " + y);
+  if (x==="+" || x==="-" || x==="*" || x==="/" || x==="(" || x===")") {
+    print("What is being looked at: " + x);
     return true;
   } else {
     return false;
   }
 }
 
-function isOperand(x) {
+function isOperand(y) {
   //if x is a number, return true.
-  if (!(isNaN(x))) {
+  if (!(isNaN(y))) {
     return true;
   } else {
     return false;
+  }
+}
+
+function whichOperator(z) {
+  switch (z) {
+    case "+":
+	    return z;
+	    break;
+    case "-":
+            return z;
+            break;
+    case "*":
+            return z;
+	    break;
+    case "/":
+            return z;
+	    break;
+    case "(":
+            return z;
+            break;
+    case ")":
+	    return z;
+	    break;
+    default:
+            print("You've entered in an invalid operator.");	    
   }
 }
 
 //main function that converts an infix notation function to postfix
 function postfixCalc (input) {
+  //declare new stack as operatorStack
   var operatorStack = new Stack();
-  print("length of input: " + input.length);
+  //declare new string for the end result that will be printed out 
+  //to the user.
+  var postfixString = "";
+  if (DEBUG) print("length of input: " + input.length);//DEBUG
   for (var i = 0; i < input.length; i++) {
+    //if current character is an operator
     if (isOperator(input[i])) { 
-      operatorStack.push(input[i]);
-      print("Pushing to stack: " + input[i]);
+      //if stack is empty or contains a "(" on top
+      //if (DEBUG) print("operatorStack.length: " + operatorStack.length);
+      if ((operatorStack.length == 0) || operatorStack.top === "(") {
+        if (DEBUG) print("Adding to stack");
+	operatorStack.push(input[i]);
+      } else {
+	//if (DEBUG) print("adding: " + input[i]);      
+        operatorStack.push(input[i]);
+      }
+      //operatorStack.push(input[i]);
+      if (DEBUG) print("Pushing to stack: " + input[i]);//DEBUG
     } else {
-      print("Not an operator: " + input[i]);
+      if (DEBUG) print("Not an operator: " + input[i]);//DEBUG
+      //Anything coming here is an operand. Put these characters
+      //into postfixString
+      postfixString += input[i];
+      if (DEBUG) print("This is postfixString: " + postfixString);
     }
-    print("This is what the input character is: " + input[i]);
+    if (DEBUG) print("This is what the input character is: " + input[i]);//DEBUG
   }
 }
 
