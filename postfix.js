@@ -44,7 +44,18 @@ function clear() {
   this.top = 0;
 }
 
+function isOperator(y) {
+  //if y is a valid operator, return true.
+  if (y==="+" || y==="-" || y==="*" || y==="/" || y==="(" || y===")") {
+    print("What is being looked at: " + y);
+    return true;
+  } else {
+    return false;
+  }
+}
+
 function isOperand(x) {
+  //if x is a number, return true.
   if (!(isNaN(x))) {
     return true;
   } else {
@@ -54,14 +65,15 @@ function isOperand(x) {
 
 //main function that converts an infix notation function to postfix
 function postfixCalc (input) {
-  var operandatorStack = new Stack();
+  var operatorStack = new Stack();
+  print("length of input: " + input.length);
   for (var i = 0; i < input.length; i++) {
-    if (isOperand(input[i])) {
-      operandatorStack.push(input[i]);
-      print("Pushing to stack:" + input [i]);
+    if (isOperator(input[i])) { 
+      operatorStack.push(input[i]);
+      print("Pushing to stack: " + input[i]);
+    } else {
+      print("Not an operator: " + input[i]);
     }
-    //operandatorStack.push(input[i]);
-    //isOperand(input[i]);
     print("This is what the input character is: " + input[i]);
   }
 }
