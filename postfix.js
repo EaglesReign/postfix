@@ -3,6 +3,13 @@
 //postfix.js
 //This program does this.
 
+//declare stack that will be used to store operators
+var operatorStack = new Stack();
+
+//this string will store the end result of converting an
+//infix expression to postfix
+var postfixString = "";
+
 //DEBUG variable to debug code as I work
 var DEBUG = true;
 
@@ -69,22 +76,42 @@ function isOperand(y) {
 function whichOperator(z) {
   switch (z) {
     case "+":
-	    return z;
+	    
 	    break;
     case "-":
-            return z;
+            
             break;
     case "*":
-            return z;
+	    //if the incoming symbol has higher precedence than the top of
+	    //the stack, push it on the stack.
+            if (operatorStack.top==="+" || operatorStack.top==="-") {
+              if (DEBUG) print("Adding '*' to stack");
+	      operatorStack.push(z);
+	    }
 	    break;
     case "/":
-            return z;
+            //if the incoming symbol has higher precedence than the top of 
+	    //the stack, push it on the stack.
+	    if (operatorStack.top==="+" || operatorStack.top==="-") {
+              if (DEBUG) print("Adding '/' to stack");
+	      operatorStack.push(z);
+	    }
 	    break;
     case "(":
-            return z;
+            //if incoming symbol is a "(", push it
+            if (DEBUG) print("Adding '(' to stack");
+            operatorStack.push(z);
             break;
     case ")":
-	    return z;
+	    //if incoming symbol is a ")", pop the stack and print
+	    //operators until you see a left parenthesis, then discard
+	    //the pair of parentheses
+	    var temp = operatorStack.pop();
+            postfixString += temp;
+	    while (!(temp=="(")) {
+              temp = operatorStack.pop();
+	      postfixString += temp;
+	    }
 	    break;
     default:
             print("You've entered in an invalid operator.");	    
@@ -93,12 +120,8 @@ function whichOperator(z) {
 
 //main function that converts an infix notation function to postfix
 function postfixCalc (input) {
-  //declare new stack as operatorStack
-  var operatorStack = new Stack();
-  //declare new string for the end result that will be printed out 
-  //to the user.
-  var postfixString = "";
   if (DEBUG) print("length of input: " + input.length);//DEBUG
+
   for (var i = 0; i < input.length; i++) {
     //if current character is an operator
     if (isOperator(input[i])) { 
@@ -107,19 +130,14 @@ function postfixCalc (input) {
         if (DEBUG) print("Adding operator to stack");
 	operatorStack.push(input[i]);
       } else {
-        //if incoming symbol is a "(", push it
-	if (input[i]=="(") {
-          if (DEBUG) print("Adding '(' to stack");
-          operatorStack.push(input[i]);
-	}
-	operatorStack.push(input[i]);
+	//deal with all operators      
+	whichOperator(input[i]);      
       }
-      //operatorStack.push(input[i]);
       if (DEBUG) print("Pushing to stack: " + input[i]);//DEBUG
     } else {
       if (DEBUG) print("Not an operator: " + input[i]);//DEBUG
       //Anything coming here is an operand. Put these characters
-      //into postfixString
+      //into postfixString immediately
       postfixString += input[i];
       if (DEBUG) print("This is postfixString: " + postfixString);
     }
