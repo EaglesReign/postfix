@@ -103,7 +103,6 @@ function postfixCalc (input) {
     //if current character is an operator
     if (isOperator(input[i])) { 
       //if stack is empty or contains a "(" on top
-      //if (DEBUG) print("operatorStack.length: " + operatorStack.length);
       if ((operatorStack.length == 0) || operatorStack.top === "(") {
         if (DEBUG) print("Adding to stack");
 	operatorStack.push(input[i]);
