@@ -104,11 +104,15 @@ function postfixCalc (input) {
     if (isOperator(input[i])) { 
       //if stack is empty or contains a "(" on top
       if ((operatorStack.length == 0) || operatorStack.top === "(") {
-        if (DEBUG) print("Adding to stack");
+        if (DEBUG) print("Adding operator to stack");
 	operatorStack.push(input[i]);
       } else {
-	//if (DEBUG) print("adding: " + input[i]);      
-        operatorStack.push(input[i]);
+        //if incoming symbol is a "(", push it
+	if (input[i]=="(") {
+          if (DEBUG) print("Adding '(' to stack");
+          operatorStack.push(input[i]);
+	}
+	operatorStack.push(input[i]);
       }
       //operatorStack.push(input[i]);
       if (DEBUG) print("Pushing to stack: " + input[i]);//DEBUG
