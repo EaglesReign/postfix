@@ -94,10 +94,31 @@ function whichOperator(z) {
 	    if (operatorStack.top==="+" || operatorStack.top==="-") {
               temp = operatorStack.pop();
               postfixString += temp;
+	      operatorStack.push(z);
+	    }
+
+	    //lower precedence
+	    if (operatorStack.top==="*" || operatorStack.top==="/") {
+              temp = operatorStack.pop();
+	      postfixString += temp;
+	      whichOperator(z);
 	    }
 	    break;
     case "-":
-            
+	    //equal precedence
+	    var temp;
+	    if (operatorStack.top==="+" || operatorStack.top==="-") {
+              temp = operatorStack.pop();
+	      postfixString += temp;
+	      operatorStack.push(z);
+	    }
+
+	    //lower precedence
+	    if (operatorStack.top==="*" || operatorStack.top==="/") {
+              temp = operatorStack.pop();
+	      postfixString += temp;
+	      whichOperator(z);
+	    }
             break;
     case "*":
 	    //higher precedence
@@ -105,11 +126,25 @@ function whichOperator(z) {
               if (DEBUG) print("Adding '*' to stack");
 	      operatorStack.push(z);
 	    }
+
+	    //equal precedence
+	    if (operatorStack.top==="*" || operatorStack.top==="/") {
+              temp = operatorStack.pop();
+	      postfixString += temp;
+	      operatorStack.push(z);
+	    }
 	    break;
     case "/":
 	    //higher precedence
 	    if (operatorStack.top==="+" || operatorStack.top==="-") {
               if (DEBUG) print("Adding '/' to stack");
+	      operatorStack.push(z);
+	    }
+
+	    //equal precedence
+	    if (operatorStack.top==="*" || operatorStack.top==="/") {
+              temp = operatorStack.pop();
+	      postfixString += temp;
 	      operatorStack.push(z);
 	    }
 	    break;
