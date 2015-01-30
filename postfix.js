@@ -90,7 +90,11 @@ function whichOperator(z) {
   switch (z) {
     case "+":
             //equal precedence
-	    
+	    var temp;
+	    if (operatorStack.top==="+" || operatorStack.top==="-") {
+              temp = operatorStack.pop();
+              postfixString += temp;
+	    }
 	    break;
     case "-":
             
