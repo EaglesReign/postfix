@@ -11,7 +11,7 @@ var operatorStack = new Stack();
 var postfixString = "";
 
 //DEBUG variable to debug code as I work
-var DEBUG = true;
+var DEBUG = false;
 
 //Prompts the user for an infix expression
 var input = readline();
@@ -57,7 +57,7 @@ function clear() {
 function isOperator(x) {
   //if y is a valid operator, return true.
   if (x==="+" || x==="-" || x==="*" || x==="/" || x==="(" || x===")") {
-    print("What is being looked at: " + x);
+    if (DEBUG) print("What is being looked at: " + x);
     return true;
   } else {
     return false;
@@ -91,61 +91,65 @@ function whichOperator(z) {
     case "+":
             //equal precedence
 	    var temp;
-	    if (operatorStack.top==="+" || operatorStack.top==="-") {
+	    if (operatorStack.peek()==="+" || operatorStack.peek()==="-") {
               temp = operatorStack.pop();
               postfixString += temp;
 	      operatorStack.push(z);
-	    }
+	    } else {
 
 	    //lower precedence
-	    if (operatorStack.top==="*" || operatorStack.top==="/") {
+	    if (operatorStack.peek()==="*" || operatorStack.peek()==="/") {
               temp = operatorStack.pop();
 	      postfixString += temp;
 	      whichOperator(z);
+	    }
 	    }
 	    break;
     case "-":
 	    //equal precedence
 	    var temp;
-	    if (operatorStack.top==="+" || operatorStack.top==="-") {
+	    if (operatorStack.peek()==="+" || operatorStack.peek()==="-") {
               temp = operatorStack.pop();
 	      postfixString += temp;
 	      operatorStack.push(z);
-	    }
+	    } else {
 
 	    //lower precedence
-	    if (operatorStack.top==="*" || operatorStack.top==="/") {
+	    if (operatorStack.peek()==="*" || operatorStack.peek()==="/") {
               temp = operatorStack.pop();
 	      postfixString += temp;
 	      whichOperator(z);
 	    }
+	    }
             break;
     case "*":
 	    //higher precedence
-            if (operatorStack.top==="+" || operatorStack.top==="-") {
+            if (operatorStack.peek()==="+" || operatorStack.peek()==="-") {
               if (DEBUG) print("Adding '*' to stack");
 	      operatorStack.push(z);
-	    }
+	    } else {
 
 	    //equal precedence
-	    if (operatorStack.top==="*" || operatorStack.top==="/") {
+	    if (operatorStack.peek()==="*" || operatorStack.peek()==="/") {
               temp = operatorStack.pop();
 	      postfixString += temp;
 	      operatorStack.push(z);
+	    }
 	    }
 	    break;
     case "/":
 	    //higher precedence
-	    if (operatorStack.top==="+" || operatorStack.top==="-") {
+	    if (operatorStack.peek()==="+" || operatorStack.peek()==="-") {
               if (DEBUG) print("Adding '/' to stack");
 	      operatorStack.push(z);
-	    }
+	    } else {
 
 	    //equal precedence
-	    if (operatorStack.top==="*" || operatorStack.top==="/") {
+	    if (operatorStack.peek()==="*" || operatorStack.peek()==="/") {
               temp = operatorStack.pop();
 	      postfixString += temp;
 	      operatorStack.push(z);
+	    }
 	    }
 	    break;
     case "(":
@@ -170,8 +174,6 @@ function whichOperator(z) {
 	    while (!(temp==="("));
 	    break;
 	    }
-    //default:
-            //print("Seemingly impossible case..?");	    
 }
 
 //main function that converts an infix notation function to postfix
@@ -182,8 +184,8 @@ function postfixCalc (input) {
     //if current character is an operator
     if (isOperator(input[i])) { 
       //if stack is empty or contains a "(" on top
-      if ((operatorStack.length == 0) || operatorStack.top === "(") {
-        if (DEBUG) print("Adding operator to stack");
+      if ((operatorStack.length == 0) || operatorStack.peek() === "(") {
+	print("Adding operator to stack" + input[i]);
 	operatorStack.push(input[i]);
       } else {
 	//deal with all operators      
@@ -199,6 +201,20 @@ function postfixCalc (input) {
     }
     if (DEBUG) print("This is what the input character is: " + input[i]);//DEBUG
   }
+  //end of user's input expression
+  //pop and print all operators on the stack.
+  //there should be no parentheses at this point.
+  var temp1;
+  print("Operator stack dataStore: " + operatorStack.dataStore);
+  for (var i = 0; i < operatorStack.length; i++) {
+    print("operator stack: " + operatorStack.peek());
+    temp1 = operatorStack.pop();
+    postfixString += temp1;
+  }
+  //print the original input
+  print("User's Input (Infix Notation): " + input);
+  //print postfix notation
+  print("Postfix Notation of Input: " + postfixString);
 }
 
 
