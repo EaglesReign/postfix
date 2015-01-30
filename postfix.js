@@ -73,25 +73,37 @@ function isOperand(y) {
   }
 }
 
+//This function determines which operator is being used and reacts accordingly.
+
+//If the incoming symbol has higher precedence than the top of the stack, push it 
+//on the stack.
+
+//If the incoming symbol has equal precedence with the top of the stack,
+//use association. If the association is left to right, pop and print the 
+//top of the stack and then push the incoming operator. If the association is
+//right to left, push the incoming operator.
+
+//If the incoming symbol has lower precedence that the stmbol on the top of the
+//stack, pop the stack and print the top operator. Then test the incoming
+//operator against the new top of the stack.
 function whichOperator(z) {
   switch (z) {
     case "+":
+            //equal precedence
 	    
 	    break;
     case "-":
             
             break;
     case "*":
-	    //if the incoming symbol has higher precedence than the top of
-	    //the stack, push it on the stack.
+	    //higher precedence
             if (operatorStack.top==="+" || operatorStack.top==="-") {
               if (DEBUG) print("Adding '*' to stack");
 	      operatorStack.push(z);
 	    }
 	    break;
     case "/":
-            //if the incoming symbol has higher precedence than the top of 
-	    //the stack, push it on the stack.
+	    //higher precedence
 	    if (operatorStack.top==="+" || operatorStack.top==="-") {
               if (DEBUG) print("Adding '/' to stack");
 	      operatorStack.push(z);
@@ -106,16 +118,21 @@ function whichOperator(z) {
 	    //if incoming symbol is a ")", pop the stack and print
 	    //operators until you see a left parenthesis, then discard
 	    //the pair of parentheses
-	    var temp = operatorStack.pop();
-            postfixString += temp;
-	    while (!(temp=="(")) {
-              temp = operatorStack.pop();
-	      postfixString += temp;
+	    var temp;
+	    do {
+	      temp = operatorStack.pop();
+              //ensures that "(" is not added to postfixString.
+	      if (!(temp==="(")) {
+	        postfixString += temp;
+	      }
 	    }
+	    //while temp is not equal to '(', continue popping the stack and 
+	    //compare again.
+	    while (!(temp==="("));
 	    break;
-    default:
-            print("You've entered in an invalid operator.");	    
-  }
+	    }
+    //default:
+            //print("Seemingly impossible case..?");	    
 }
 
 //main function that converts an infix notation function to postfix
