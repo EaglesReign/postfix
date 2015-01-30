@@ -172,6 +172,8 @@ function whichOperator(z) {
 	      }
 	    }
 	    //while temp is not equal to '(', continue popping the stack and 
+	    //compare again
+	    while (!(temp==="("));
 	    break;
 	    }
 }
