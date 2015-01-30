@@ -123,6 +123,7 @@ function whichOperator(z) {
 	    }
             break;
     case "*":
+	    var temp;
 	    //higher precedence
             if (operatorStack.peek()==="+" || operatorStack.peek()==="-") {
               if (DEBUG) print("Adding '*' to stack");
@@ -138,6 +139,7 @@ function whichOperator(z) {
 	    }
 	    break;
     case "/":
+	    var temp;
 	    //higher precedence
 	    if (operatorStack.peek()==="+" || operatorStack.peek()==="-") {
               if (DEBUG) print("Adding '/' to stack");
@@ -170,8 +172,6 @@ function whichOperator(z) {
 	      }
 	    }
 	    //while temp is not equal to '(', continue popping the stack and 
-	    //compare again.
-	    while (!(temp==="("));
 	    break;
 	    }
 }
@@ -184,6 +184,8 @@ function postfixCalc (input) {
     //if current character is an operator
     if (isOperator(input[i])) { 
       //if stack is empty or contains a "(" on top
+      //I believe that this next line is what is causing the bug where 
+      //operators are not being pushed onto the stack.
       if ((operatorStack.length == 0) || operatorStack.peek() === "(") {
 	print("Adding operator to stack" + input[i]);
 	operatorStack.push(input[i]);
@@ -200,6 +202,7 @@ function postfixCalc (input) {
       if (DEBUG) print("This is postfixString: " + postfixString);
     }
     if (DEBUG) print("This is what the input character is: " + input[i]);//DEBUG
+   
   }
   //end of user's input expression
   //pop and print all operators on the stack.
