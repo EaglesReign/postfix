@@ -1,7 +1,9 @@
 //Phil Hofer
 //1/28/2015
 //postfix.js
-//This program does this.
+//This program takes an infix notation expression and converts it 
+//to postfix. Then, it will calculate the answer using this 
+//string.
 
 //declare stack that will be used to store operators
 var operatorStack = new Stack();
@@ -104,9 +106,7 @@ function whichOperator(z) {
 	        postfixString += temp;
 	        whichOperator(z);
 	      } else {
-                if (operatorStack.length()==0 || operatorStack.peek()==="(") {
                   operatorStack.push(z);
-	        }
 	      }
 	    }
 	    if (DEBUG) print("BREAK");
@@ -126,9 +126,7 @@ function whichOperator(z) {
 	        postfixString += temp;
 	        whichOperator(z);
 	      } else {
-                if (operatorStack.length()==0 || operatorStack.peek()==="(") {
                   operatorStack.push(z);
-	        }
 	      }
 	    }
             break;
@@ -185,6 +183,74 @@ function whichOperator(z) {
 	    }
 }
 
+//This function calculates the answer to the problem once it is in postfix notation
+function calculate(post) {
+  var postStack = new Stack();
+  var total=0;
+  //iterate through the postfixString "post" as many times as there are characters
+  //in the string passed to post.
+  for (var i=0;i<post.length;i++) {
+    if (isOperand(post[i])) {
+      //operands go here
+      postStack.push(post[i]);
+    } else {
+      if (isOperator(post[i])) {
+	//operators go here
+        if (enoughOperands(postStack)) {
+          //if there are at least 2 operands on the stack, we are here
+          var temp, temp1;//top 2 operands on stack
+	  temp = postStack.pop();
+	  temp1 = postStack.pop();
+	  //operates on the set of operands with each operator 
+	  //then pushes the result
+	  switch (post[i]) {
+            case "+":
+	      total = parseInt(temp) + parseInt(temp1);
+	      if (DEBUG) print(total);
+	      postStack.push(total);
+	      break;
+	    case "-":
+	      total = parseInt(temp) - parseInt(temp1);
+	      if (DEBUG) print(total);
+	      postStack.push(total);
+	      break;
+	    case "*":
+	      total = parseInt(temp) * parseInt(temp1);
+	      if (DEBUG) print(total);
+	      postStack.push(total);
+	      break;
+	    case "/":
+	      total = parseInt(temp) / parseInt(temp1);
+	      if (DEBUG) print(total);
+	      postStack.push(total);
+	      break;
+	  }
+	} else {
+          //not enough operands, needed at least 2 on stack
+	  print("Error: There are not enough values in the expression.");
+	}
+      }
+    }
+  }
+  if (postStack.length() == 1) {
+    //only one value on the stack
+    var result = postStack.pop();
+    return result;
+  } else {
+    //more than one value still on the stack
+    print("Error: There are too many values in the expression.");
+  }
+}
+
+//checks to make sure that there are at least 2 operands on the stack
+function enoughOperands(stack) {
+  if (stack < 2) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 //main function that converts an infix notation function to postfix
 function postfixCalc (input) {
 
@@ -220,6 +286,9 @@ function postfixCalc (input) {
   print("User's Input (Infix Notation): " + input);
   //print postfix notation
   print("Postfix Notation of Input: " + postfixString);
+  //calulate the answer to the postfix notation problem
+  print("The result of:" + postfixString + " is: " + calculate(postfixString));
+
 }
 
 
