@@ -57,7 +57,6 @@ function clear() {
 function isOperator(x) {
   //if y is a valid operator, return true.
   if (x==="+" || x==="-" || x==="*" || x==="/" || x==="(" || x===")") {
-    if (DEBUG) print("What is being looked at: " + x);
     return true;
   } else {
     return false;
@@ -126,7 +125,6 @@ function whichOperator(z) {
 	    var temp;
 	    //higher precedence
             if (operatorStack.peek()==="+" || operatorStack.peek()==="-") {
-              if (DEBUG) print("Adding '*' to stack");
 	      operatorStack.push(z);
 	    } else {
 
@@ -142,7 +140,6 @@ function whichOperator(z) {
 	    var temp;
 	    //higher precedence
 	    if (operatorStack.peek()==="+" || operatorStack.peek()==="-") {
-              if (DEBUG) print("Adding '/' to stack");
 	      operatorStack.push(z);
 	    } else {
 
@@ -156,7 +153,6 @@ function whichOperator(z) {
 	    break;
     case "(":
             //if incoming symbol is a "(", push it
-            if (DEBUG) print("Adding '(' to stack");
             operatorStack.push(z);
             break;
     case ")":
@@ -180,7 +176,6 @@ function whichOperator(z) {
 
 //main function that converts an infix notation function to postfix
 function postfixCalc (input) {
-  if (DEBUG) print("length of input: " + input.length);//DEBUG
 
   for (var i = 0; i < input.length; i++) {
     //if current character is an operator
@@ -189,21 +184,16 @@ function postfixCalc (input) {
       //I believe that this next line is what is causing the bug where 
       //operators are not being pushed onto the stack.
       if ((operatorStack.length == 0) || operatorStack.peek() === "(") {
-	//print("Adding operator to stack" + input[i]);
 	operatorStack.push(input[i]);
       } else {
 	//deal with all operators      
 	whichOperator(input[i]);      
       }
-      if (DEBUG) print("Pushing to stack: " + input[i]);//DEBUG
     } else {
-      if (DEBUG) print("Not an operator: " + input[i]);//DEBUG
       //Anything coming here is an operand. Put these characters
       //into postfixString immediately
       postfixString += input[i];
-      if (DEBUG) print("This is postfixString: " + postfixString);
     }
-    if (DEBUG) print("This is what the input character is: " + input[i]);//DEBUG
    
   }
   //end of user's input expression
@@ -211,7 +201,6 @@ function postfixCalc (input) {
   //there should be no parentheses at this point.
   var temp1;
   for (var i = 0; i < operatorStack.length; i++) {
-    //print("operator stack: " + operatorStack.peek());
     temp1 = operatorStack.pop();
     postfixString += temp1;
   }
