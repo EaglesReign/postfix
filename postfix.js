@@ -82,9 +82,10 @@ function isOperand(y) {
 //top of the stack and then push the incoming operator. If the association is
 //right to left, push the incoming operator.
 
-//If the incoming symbol has lower precedence that the stmbol on the top of the
+//If the incoming symbol has lower precedence that the symbol on the top of the
 //stack, pop the stack and print the top operator. Then test the incoming
 //operator against the new top of the stack.
+//While testing the incoming operator, if it is a "+" or "-", push it to the stack.
 function whichOperator(z) {
   switch (z) {
     case "+":
@@ -94,15 +95,21 @@ function whichOperator(z) {
               temp = operatorStack.pop();
               postfixString += temp;
 	      operatorStack.push(z);
+	      if (DEBUG) print("Pushing to the stack: " + z);
 	    } else {
 
-	    //lower precedence
-	    if (operatorStack.peek()==="*" || operatorStack.peek()==="/") {
-              temp = operatorStack.pop();
-	      postfixString += temp;
-	      whichOperator(z);
+	      //lower precedence
+	      if (operatorStack.peek()==="*" || operatorStack.peek()==="/") {
+                temp = operatorStack.pop();
+	        postfixString += temp;
+	        whichOperator(z);
+	      } else {
+                if (operatorStack.length()==0 || operatorStack.peek()==="(") {
+                  operatorStack.push(z);
+	        }
+	      }
 	    }
-	    }
+	    if (DEBUG) print("BREAK");
 	    break;
     case "-":
 	    //equal precedence
@@ -114,11 +121,15 @@ function whichOperator(z) {
 	    } else {
 
 	    //lower precedence
-	    if (operatorStack.peek()==="*" || operatorStack.peek()==="/") {
-              temp = operatorStack.pop();
-	      postfixString += temp;
-	      whichOperator(z);
-	    }
+	      if (operatorStack.peek()==="*" || operatorStack.peek()==="/") {
+                temp = operatorStack.pop();
+	        postfixString += temp;
+	        whichOperator(z);
+	      } else {
+                if (operatorStack.length()==0 || operatorStack.peek()==="(") {
+                  operatorStack.push(z);
+	        }
+	      }
 	    }
             break;
     case "*":
@@ -128,12 +139,12 @@ function whichOperator(z) {
 	      operatorStack.push(z);
 	    } else {
 
-	    //equal precedence
-	    if (operatorStack.peek()==="*" || operatorStack.peek()==="/") {
-              temp = operatorStack.pop();
-	      postfixString += temp;
-	      operatorStack.push(z);
-	    }
+	      //equal precedence
+	      if (operatorStack.peek()==="*" || operatorStack.peek()==="/") {
+                temp = operatorStack.pop();
+	        postfixString += temp;
+	        operatorStack.push(z);
+	      }
 	    }
 	    break;
     case "/":
@@ -143,12 +154,12 @@ function whichOperator(z) {
 	      operatorStack.push(z);
 	    } else {
 
-	    //equal precedence
-	    if (operatorStack.peek()==="*" || operatorStack.peek()==="/") {
-              temp = operatorStack.pop();
-	      postfixString += temp;
-	      operatorStack.push(z);
-	    }
+	      //equal precedence
+	      if (operatorStack.peek()==="*" || operatorStack.peek()==="/") {
+                temp = operatorStack.pop();
+	        postfixString += temp;
+	        operatorStack.push(z);
+	      }
 	    }
 	    break;
     case "(":
@@ -183,13 +194,16 @@ function postfixCalc (input) {
       //if stack is empty or contains a "(" on top
       if ((operatorStack.length() == 0) || operatorStack.peek() === "(") {
 	operatorStack.push(input[i]);
+	if (DEBUG) print("Stack was empty, pushed: " + input[i]);
       } else {
-	//deal with all operators      
+	//deal with all operators
+	if (DEBUG) print("Calling whichOperator on: " + input[i]);      
 	whichOperator(input[i]);      
       }
     } else {
       //Anything coming here is an operand. Put these characters
       //into postfixString immediately
+      if (DEBUG) print("Adding to postfixString: " + input[i]);
       postfixString += input[i];
     }
    
