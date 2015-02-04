@@ -181,9 +181,7 @@ function postfixCalc (input) {
     //if current character is an operator
     if (isOperator(input[i])) { 
       //if stack is empty or contains a "(" on top
-      //I believe that this next line is what is causing the bug where 
-      //operators are not being pushed onto the stack.
-      if ((operatorStack.length == 0) || operatorStack.peek() === "(") {
+      if ((operatorStack.length() == 0) || operatorStack.peek() === "(") {
 	operatorStack.push(input[i]);
       } else {
 	//deal with all operators      
@@ -200,7 +198,7 @@ function postfixCalc (input) {
   //pop and print all operators on the stack.
   //there should be no parentheses at this point.
   var temp1;
-  for (var i = 0; i < operatorStack.length; i++) {
+  for (var i = 0; i < operatorStack.length(); i++) {
     temp1 = operatorStack.pop();
     postfixString += temp1;
   }
